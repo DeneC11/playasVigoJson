@@ -15,6 +15,6 @@ Aplicación web que consume un JSON público con información sobre las playas d
 - JavaScript
 - JSON público
 
-## 🔗 Demo
+##  Demo
 
 [Ver demo](http://dnavar443:rl9RqMdt@www.dnavarro.com.mialias.net/ejercicio1/vigo.html)
