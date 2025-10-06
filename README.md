@@ -1,15 +1,15 @@
-# Playas de Vigo 🌊
+# Playas de Vigo 
 
 Aplicación web que consume un JSON público con información sobre las playas de Vigo. Permite buscar por nombre y código postal, mostrando datos como nombre, ubicación, descripción e imagen.
 
-## 🚀 Funcionalidades
+##  Funcionalidades
 
 - Búsqueda dinámica por nombre y código postal
 - Renderizado de datos desde un JSON externo
 - Interfaz clara con imágenes y descripciones
 - Código modular en JavaScript
 
-## 🛠️ Tecnologías utilizadas
+##  Tecnologías utilizadas
 
 - HTML5 / CSS3
 - JavaScript
