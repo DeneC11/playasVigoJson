@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datos Vigo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Lectura de un JSON Wev(Playas de Vigo)</h1>
+    <div class="filtros">
+        <div class="searchContainer">
+            <input type="text" id="busqueda" placeholder="Buscar por nombre...">
+            <label for="busqueda"><i class="fa-solid fa-magnifying-glass searchIcon"></i></label>            
+        </div>
+        <select name="" id="filtroCp">
+            <option value="">---Selecciona un codigo postal---</option>
+        </select>
+    </div>
+    <div class="grid" id="contenedor">
+        <!-- tarjetas generadas en JS -->
+    </div>
+    <script>
+        //declaramos una variable global para almacenar los datos de las playas
+        let playas=[];
+        const contenedor = document.getElementById('contenedor');
+        const busqueda = document.getElementById('busqueda');
+        const filtroCp = document.getElementById('filtroCp');
+        //cargar datos JSON medianete fetch
+        fetch('https://datos.vigo.org/data/turismo/poi-playas-es.json')
+        .then(res=>{
+            if(!res.ok){
+                throw new Error('Error al cargar los datos');
+            }
+            return res.json();
+        })
+        .then(data=>{
+            playas=data;
+            cargarCodigosPostales(playas);
+            mostrarPlayas(playas);
+        })
+        .catch(err=>{
+            contenedor.innerHTML=`<p class="error">Error al cargar los datos de las playas, intentalo más tarde</p>`;
+            console.log("Error:", err);
+        });
+        function mostrarPlayas(lista){
+            contenedor.innerHTML="";
+            if(lista.length===0){
+                //Mostrar mensaje cuando no hay resultado(array vacio)
+                contenedor.innerHTML=`<p class="error">No se han encontrado playas con los criterios seleccionados</p>`;
+                return;
+            }
+            // forEach(lista as p){
+
+            // }
+            lista.forEach(p=>{
+                const card =document.createElement('div');
+                card.className='card';
+                //imprimir la imagen o un remplazo si no hay
+                const image = p.image_uri?`<img src="${p.image_uri}"alt=""loading="lazy">`: 
+                // `<img src="https://tse2.mm.bing.net/th/id/OIP.ZlBrKGZ3LUiCh-0BPUPdRgAAAA?rs=1&pid=ImgDetMain&o=7&rm=3"alt=""loading="lazy">`
+                `<div class="noImage"><i class="fa-solid fa-image"></i></div>`
+                ;
+                //imprimir la direccion combinando address y cp
+                const direccion =(p.address?` ${p.address} -`:``)+(p.postcode?` ${p.postcode}`:`Sin CP`);
+                
+                // const description =p.description;
+                card.innerHTML=`
+                    ${image}
+                    <div class='cardContent'>
+                        <h3>${p.title}</h3>
+                        ${direccion ? `<div class='direccion'>CP:${direccion}</div>`:''}
+                        <p>${p.description||"Sin descripción disponible"}</p>
+                    </div>
+                `;
+                contenedor.appendChild(card);
+            })
+        }
+        //filtrar en tiempo real
+        function filtrar(){
+            const texto= busqueda.value.toLowerCase();
+            const cp = filtroCp.value;
+            const filtradas=playas.filter(p=>
+                (!texto||p.title.toLowerCase().includes(texto))&&(!cp||p.postcode===cp)
+            )
+            mostrarPlayas(filtradas);
+        }
+        //crear opciones UNICAS de codigo postal
+        function cargarCodigosPostales(data){
+            //obtener codigos postales unicos, eliminar vacios y ordenar
+            const cps=[...new Set(data.map(p=>p.postcode).filter(Boolean))].sort();
+            cps.forEach(c=>{
+                const opt= document.createElement('option');
+                opt.value=c;
+                opt.textContent=c;
+                filtroCp.appendChild(opt);
+            })
+        }
+        //evento para los filtros
+        busqueda.addEventListener('input',filtrar);
+        filtroCp.addEventListener('change',filtrar);
+    </script>
+</body>
+</html>
