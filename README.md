@@ -18,3 +18,6 @@ Aplicación web que consume un JSON público con información sobre las playas d
 ##  Demo
 
 [Ver demo](http://dnavar443:rl9RqMdt@www.dnavarro.com.mialias.net/ejercicio1/vigo.html)
+
+## Autor
+Proyecto desarrollado por DeneC11 como parte del curso de Desarrollo Web.
